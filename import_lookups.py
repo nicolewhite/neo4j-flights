@@ -30,7 +30,7 @@ for d in data:
     d['Description'] = airport
 
 query = """
-MATCH (a:Airport {id:TOINT{Code})})
+MATCH (a:Airport {id:TOINT({Code})})
 SET a.name = UPPER({Description})
 """
 
