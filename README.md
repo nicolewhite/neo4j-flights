@@ -3,13 +3,11 @@ flight_graph
 
 A Neo4j graph database of flight data.
 
-## Data
+## Create the DB
 
 Data is located [here](http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID=236&DB_Short_Name=On-Time). Select the pre-zipped checkbox and download. Unzip the file. Make sure you're pointing to the correct file name at line 8 of `import.py`.
 
 Also download the lookup tables for `UniqueCarrier` and `OriginAirportID`. Save these as `.csv`, not `.csv-`.
-
-Finally, to create the db:
 
 ```
 python schema.py
@@ -17,7 +15,9 @@ python import.py
 python import_lookups.py
 ```
 
-And you're set!
+## Download the DB
+
+Alternatively, download the zip file [here]()https://dl.dropboxusercontent.com/u/94782892/graph.db.zip.
 
 ## Model
 
