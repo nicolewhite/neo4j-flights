@@ -1,0 +1,100 @@
+// States with the most airports.
+MATCH (:Airport)-[:IN_STATE]->(s:State)
+RETURN s.name AS State, COUNT(*) AS Count
+ORDER BY Count DESC
+LIMIT 10
+
+// Cities in Alaska with airports.
+MATCH (c:City)-[:IN_STATE]->(:State {abbr:'AK'})
+RETURN c.name
+
+// Which cities have more than 1 airport?
+MATCH (:Airport)-[:IN_CITY]->(c:City)
+WITH c, COUNT(*) AS Count
+WHERE Count > 1
+RETURN c.name AS City, Count
+ORDER BY Count
+
+// Which cities have more than 1 airport? What are they?
+MATCH (a:Airport)-[:IN_CITY]->(c:City)
+WITH c, COLLECT(a) AS airports
+WHERE LENGTH(airports) > 1
+RETURN c.name AS City, EXTRACT(a IN airports | a.name) AS Airports
+
+// Leading cause of departure delays at LAX? Average delay time.
+MATCH (f:Flight)-[:ORIGIN]->(:Airport {abbr:'LAX'}),
+      (f)-[d:DELAYED_BY]->(r:Reason)
+RETURN r.name AS Reason, AVG(d.time) AS Average
+ORDER BY Average DESC
+
+// California airports with longest avg taxi times for departing flights.
+MATCH (f:Flight)-[o:ORIGIN]->(a:Airport)-[:IN_STATE]->(:State {abbr:'CA'})
+RETURN a.abbr + ' - ' + a.name AS Airport, AVG(o.taxi_time) AS Average
+ORDER BY Average DESC
+
+// Top airports that flights leaving SFO were diverted to.
+MATCH (f:Flight)-[:ORIGIN]->(:Airport {abbr:'SFO'}),
+      (f)-[d:DIVERTED_TO]->(a:Airport)
+WHERE d.step = 1
+RETURN a.abbr AS Airport, COUNT(a.abbr) AS Count
+ORDER BY Count DESC
+LIMIT 10
+
+// Flights leaving SFO diverted twice.
+MATCH (f:Flight)-[:ORIGIN]->(:Airport {abbr:'SFO'}),
+      (f)-[d:DIVERTED_TO]->(a:Airport)
+WHERE d.step = 2
+RETURN a.abbr AS Airport, COUNT(a.abbr) AS Count
+ORDER BY Count DESC
+LIMIT 10
+
+// Which airports was that one flight diverted to?
+MATCH (f:Flight)-[:ORIGIN]->(:Airport {abbr:'SFO'}),
+      (f)-[:DIVERTED_TO]->(:Airport)
+WITH f, COUNT(*) AS count
+WHERE count = 2
+MATCH (f)-[d:DIVERTED_TO]->(a:Airport)-[:IN_STATE]->(s:State)
+RETURN d.step AS Step, a.abbr + ' - ' + a.name AS Airport, s.name AS State
+ORDER BY Step
+
+// Top 10 carriers - leading type of delay.
+MATCH (f:Flight)-[:CARRIER]->(c:Carrier)
+WITH c, COUNT(f) AS flights
+ORDER BY flights DESC
+LIMIT 10
+
+MATCH (c)<-[:CARRIER]-(:Flight)-[:DELAYED_BY]->(r:Reason)
+WITH c.name AS Carrier, r.name AS Reason, COUNT(r.name) AS count
+ORDER BY Carrier, count DESC
+RETURN Carrier, HEAD(COLLECT(Reason)) AS `Top Delay Reason`
+
+// Path from JFK to SFO that passes through DFW on Jaunary 8th.
+MATCH (f1:Flight {day:8})-[:ORIGIN]->(jfk:Airport {abbr:'JFK'}),
+      (f2:Flight {day:8})-[:DESTINATION]->(sfo:Airport {abbr:'SFO'}),
+      (dfw:Airport {abbr:'DFW'}),
+      path = (f1)-[:ORIGIN|DESTINATION*4]-(f2)
+WHERE dfw IN NODES(path)
+RETURN path, jfk, sfo
+LIMIT 1
+
+// Follow a certain aircraft on January 31st, 2014.
+MATCH (f:Flight)
+WHERE f.day = 31 AND f.month = 1 AND f.year = 2014 //my bday!
+WITH f
+MATCH (f)-[:AIRCRAFT]->(a:Aircraft)
+WITH a, COLLECT(f) AS flights, LENGTH(COLLECT(f)) AS count
+ORDER BY count DESC
+LIMIT 1
+UNWIND flights AS f
+MATCH p = (f)-[:ORIGIN|DESTINATION]-(:Airport)
+RETURN p
+
+// Percent of flights delayed for weather, by airport.
+MATCH (f:Flight)-[:ORIGIN]->(a:Airport)
+WITH a, COUNT(f) AS total
+MATCH (a)<-[:ORIGIN]-(:Flight)-[:DELAYED_BY]->(:Reason {name:'WEATHER'}),
+      (a)-[:IN_STATE]->(s:State)
+WITH a, total, s, COUNT(a.abbr) AS num
+RETURN a.abbr + ' - ' + a.name + ' - ' + s.name AS Airport, ((1.0 * num) / total) * 100 AS Percent
+ORDER BY Percent DESC
+LIMIT 10
