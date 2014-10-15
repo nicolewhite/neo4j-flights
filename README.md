@@ -17,7 +17,7 @@ python import_lookups.py
 
 ## Download the DB
 
-Alternatively, download the zip file [here]()https://dl.dropboxusercontent.com/u/94782892/graph.db.zip.
+Alternatively, download the zip file [here](https://dl.dropboxusercontent.com/u/94782892/graph.db.zip).
 
 ## Model
 
