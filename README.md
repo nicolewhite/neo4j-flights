@@ -22,7 +22,3 @@ Alternatively, download the zip file [here](https://dl.dropboxusercontent.com/u/
 ## Query
 
 Watch Intro to Cypher with this dataset [here](https://www.youtube.com/watch?v=VdivJqlPzCI). Queries are located in `queries`.
-
-## Model
-
-<a href="https://dl.dropboxusercontent.com/u/94782892/flight_diagram.svg" target="_blank"><img src="https://dl.dropboxusercontent.com/u/94782892/flight_diagram.svg" width="100%" height="100%"></a>
