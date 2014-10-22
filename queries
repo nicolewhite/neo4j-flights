@@ -6,7 +6,7 @@ LIMIT 10
 
 // Cities in Alaska with airports.
 MATCH (c:City)-[:IN_STATE]->(:State {abbr:'AK'})
-RETURN c.name
+RETURN c.name AS City
 
 // Which cities have more than 1 airport?
 MATCH (:Airport)-[:IN_CITY]->(c:City)
@@ -28,7 +28,9 @@ RETURN r.name AS Reason, AVG(d.time) AS Average
 ORDER BY Average DESC
 
 // California airports with longest avg taxi times for departing flights.
-MATCH (f:Flight)-[o:ORIGIN]->(a:Airport)-[:IN_STATE]->(:State {abbr:'CA'})
+MATCH (a:Airport)-[:IN_STATE]->(:State {abbr:'CA'})
+WITH a
+MATCH (:Flight)-[o:ORIGIN]->(a)
 RETURN a.abbr + ' - ' + a.name AS Airport, AVG(o.taxi_time) AS Average
 ORDER BY Average DESC
 
