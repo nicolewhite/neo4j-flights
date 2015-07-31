@@ -15,9 +15,6 @@ python import.py
 python import_lookups.py
 ```
 
-## Download the DB
-
-Alternatively, download the zip file [here](https://www.dropbox.com/s/qq1ll7nwjmtt29j/flights.db.zip?dl=0).
 
 ## Query
 
