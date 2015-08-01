@@ -15,6 +15,13 @@ python import.py
 python import_lookups.py
 ```
 
+To run the above scripts you will need to install the following python packages if you don't have them installed already.
+
+```
+pip install py2neo
+pip install unicodecsv
+```
+
 
 ## Query
 
