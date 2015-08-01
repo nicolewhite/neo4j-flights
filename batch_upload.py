@@ -1,8 +1,9 @@
 import sys
 
-def batch_upload(batch, data, query, vars = None, batch_size = 1000):
-    start = 0
-    end = batch_size
+def batch_upload(graph, data, query, vars = None, batch_size = 1000):
+    curr_batch_size = 0
+    curr_batch_count = 1
+    tx = graph.cypher.begin()
 
     for i in range(len(data)):
         if(type(data[i]) is list):
@@ -12,18 +13,20 @@ def batch_upload(batch, data, query, vars = None, batch_size = 1000):
         else:
             sys.exit("wat r u doing")
 
-        if i in range(start, end):
-            batch.append_cypher(query, params)
-        else:
-            batch.append_cypher(query, params)
-            batch.run()
-            batch.clear()
-            print("Batch %s complete." % (end / batch_size))
+        tx.append(query, params)
 
-            start = end + 1
-            end = end + batch_size
+        curr_batch_size += 1
+        if (curr_batch_size == batch_size):
+            tx.process()
+            tx.commit()
 
-    batch.run()
-    batch.clear()
-    print("Batch %s complete." % (end / batch_size))
+            print("Batch %s complete." % curr_batch_count)
+            curr_batch_count += 1
+            curr_batch_size = 0
+
+            tx = graph.cypher.begin()
+
+    tx.process()
+    tx.commit()
+    print("Batch %s complete." % curr_batch_count)
     print("All done!\n")
