@@ -1,9 +1,8 @@
 from csv_things import import_csv_to_dict
-from py2neo import neo4j
+from py2neo import Graph
 from batch_upload import batch_upload
 
-graph = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
-batch = neo4j.WriteBatch(graph)
+graph = Graph()
 
 data = import_csv_to_dict('L_UNIQUE_CARRIERS.csv', headers = True)
 
@@ -12,7 +11,7 @@ MATCH (c:Carrier {abbr:UPPER({Code})})
 SET c.name = UPPER({Description})
 """
 
-batch_upload(batch, data, query)
+batch_upload(graph, data, query)
 
 data = import_csv_to_dict('L_AIRPORT_ID.csv', headers = True)
 
@@ -34,4 +33,4 @@ MATCH (a:Airport {id:TOINT({Code})})
 SET a.name = UPPER({Description})
 """
 
-batch_upload(batch, data, query)
+batch_upload(graph, data, query)
