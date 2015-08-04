@@ -1,7 +1,8 @@
 from csv_things import import_csv_to_dict
-from py2neo import Graph
+from py2neo import authenticate, Graph
 from batch_upload import batch_upload
 
+authenticate("localhost:7474", "neo4j", "neo4j")
 graph = Graph()
 
 data = import_csv_to_dict('On_Time_On_Time_Performance_2014_1.csv', headers = True)

@@ -1,5 +1,6 @@
-from py2neo import Graph
+from py2neo import authenticate, Graph
 
+authenticate("localhost:7474", "neo4j", "neo4j")
 graph = Graph()
 
 graph.cypher.execute("CREATE CONSTRAINT ON (a:Airport) ASSERT a.id IS UNIQUE;")
