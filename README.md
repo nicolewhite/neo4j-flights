@@ -15,9 +15,13 @@ python import.py
 python import_lookups.py
 ```
 
-## Download the DB
+To run the above scripts you will need to install the following python packages if you don't have them installed already.
 
-Alternatively, download the zip file [here](https://www.dropbox.com/s/qq1ll7nwjmtt29j/flights.db.zip?dl=0).
+```
+pip install py2neo
+pip install unicodecsv
+```
+
 
 ## Query
 

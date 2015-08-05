@@ -1,9 +1,9 @@
 from csv_things import import_csv_to_dict
-from py2neo import neo4j
+from py2neo import authenticate, Graph
 from batch_upload import batch_upload
 
-graph = neo4j.GraphDatabaseService("http://localhost:7474/db/data/")
-batch = neo4j.WriteBatch(graph)
+authenticate("localhost:7474", "neo4j", "neo4j")
+graph = Graph()
 
 data = import_csv_to_dict('On_Time_On_Time_Performance_2014_1.csv', headers = True)
 
@@ -128,4 +128,4 @@ FOREACH (div IN (CASE {Div5AirportID} WHEN "" THEN [] ELSE [TOINT({Div5AirportID
 );
 """
 
-batch_upload(batch, data, query)
+batch_upload(graph, data, query)
