@@ -1,0 +1,2 @@
+py2neo==2.0.9
+unicodecsv

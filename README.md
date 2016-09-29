@@ -10,18 +10,27 @@ Data is located [here](http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID
 Also download the lookup tables for `UniqueCarrier` and `OriginAirportID`. Save these as `.csv`, not `.csv-`. They should be called `L_UNIQUE_CARRIERS.csv` and `L_AIRPORT_ID.csv`.
 
 ```
-python schema.py
-python import.py
-python import_lookups.py
+python import_all.py
 ```
 
-To run the above scripts you will need to install the following python packages if you don't have them installed already.
+## Setup
+
+To run the scripts above, you will need to install the following python packages if you don't have them installed already.
+
+### Option 1: virtualenv
+
+```
+$ virtualenv --system-site-packages env-test
+$ source env-test/bin/activate
+(env-test) $ pip install -r requirements.txt
+```
+
+### Option 2: pip install
 
 ```
 pip install py2neo
 pip install unicodecsv
 ```
-
 
 ## Query
 
