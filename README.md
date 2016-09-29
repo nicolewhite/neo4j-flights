@@ -10,7 +10,7 @@ Data is located [here](http://www.transtats.bts.gov/DL_SelectFields.asp?Table_ID
 Also download the lookup tables for `UniqueCarrier` and `OriginAirportID`. Save these as `.csv`, not `.csv-`. They should be called `L_UNIQUE_CARRIERS.csv` and `L_AIRPORT_ID.csv`.
 
 ```
-python import_all.py
+ python import_all.py --neo4j_username=neo4j --neo4j_password=<password-here>
 ```
 
 ## Setup
